@@ -38,7 +38,6 @@ def get_by_id(afiliado_id):
     with get_connection() as conn:
         return conn.execute('SELECT * FROM afiliados WHERE afiliado_id = ?', (afiliado_id,)).fetchone()
 
-# CREAR AFILIADOS
 def create(first_name, last_name, email, membership_type):
     """Crea un afiliado tomando como inputs el first_name, last_name, email y membership_type"""
     with get_connection() as conn:
@@ -47,7 +46,6 @@ def create(first_name, last_name, email, membership_type):
             (first_name, last_name, email, membership_type)
         )
 
-# MODIFICAR UN AFILIADO SEGÚN ID
 def update(afiliado_id, first_name, last_name, email, membership_type):
     """Modifica los datos de un usuario (first_name, last_name, email, membership_type) dependiendo de su afiliado_id"""
     with get_connection() as conn:
@@ -56,13 +54,16 @@ def update(afiliado_id, first_name, last_name, email, membership_type):
             (first_name, last_name, email, membership_type, afiliado_id)
         )
 
-# DESACTIVAR UN AFILIADO POR ID
 def deactivate(afiliado_id):
     """Desactiva un usuario dependiendo de su afiliado_id"""
     with get_connection() as conn:
         conn.execute('UPDATE afiliados SET estado = 0 WHERE afiliado_id=?', (afiliado_id,))
 
-# CALCULAR EL DESCUENTO SEGÚN EL TIPO DE MEMBRESÍA Y EL MONTO
+def activate(afiliado_id):
+    """Reactiva un usuario dependiendo de su afiliado_id"""
+    with get_connection() as conn:
+        conn.execute('UPDATE afiliados SET estado = 1 WHERE afiliado_id=?', (afiliado_id,))
+
 def calcular_descuento(membership_type, monto):
     """Calcula el descuento de un monto dependiendo del membershipType"""
     descuentos = {

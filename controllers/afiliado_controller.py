@@ -62,3 +62,15 @@ def desactivar(afiliado_id):
     """Desactiva un usuario por medio de su id"""
     afiliado_model.deactivate(afiliado_id)
     return redirect(url_for('afiliados.index'))
+
+@afiliado_bp.route('/afiliados/inactivos')
+def inactivos():
+    """Obtiene todos los usuarios inactivos"""
+    afiliados = afiliado_model.get_all_inactive()
+    return render_template('afiliados/inactivos.html', afiliados=afiliados)
+
+@afiliado_bp.route('/afiliados/<int:afiliado_id>/activar', methods=['POST'])
+def activar(afiliado_id):
+    """Reactiva un afiliado por medio de su afiliado_id"""
+    afiliado_model.activate(afiliado_id)
+    return redirect(url_for('afiliados.inactivos'))

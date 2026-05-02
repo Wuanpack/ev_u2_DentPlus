@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Afiliados Inactivos</h1>
+    <a href="/afiliados" class="btn btn-outline-secondary">Volver al listado</a>
+</div>
+
+{% if afiliados %}
+<table class="table table-striped table-hover">
+    <thead class="table-secondary">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Membresía</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for afiliado in afiliados %}
+        <tr class="text-muted">
+            <td>{{ afiliado['afiliado_id'] }}</td>
+            <td>{{ afiliado['first_name'] }} {{ afiliado['last_name'] }}</td>
+            <td>{{ afiliado['email'] }}</td>
+            <td>
+                {% if afiliado['membership_type'] == 'silver' %}
+                    <span class="badge bg-secondary">Silver</span>
+                {% elif afiliado['membership_type'] == 'gold' %}
+                    <span class="badge bg-warning text-dark">Gold</span>
+                {% elif afiliado['membership_type'] == 'platinum' %}
+                    <span class="badge bg-info">Platinum</span>
+                {% endif %}
+            </td>
+            <td>
+                <form action="/afiliados/{{ afiliado['afiliado_id'] }}/activar" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-success"
+                        onclick="return confirm('¿Activar este afiliado?')">
+                        Activar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">No hay afiliados inactivos.</div>
+{% endif %}
+{% endblock %}
