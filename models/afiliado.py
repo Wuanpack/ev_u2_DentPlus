@@ -2,6 +2,7 @@ import sqlite3
 
 DB_PATH = 'dentplus.db'
 
+# INICIA LA CONEXIÓN CON LA BASE DE DATOS
 def get_connection():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -22,24 +23,28 @@ def init_db():
     conn.commit()
     conn.close()
 
+# OBTENER TODOS LOS AFILIADOS ACTIVOS
 def get_all():
     conn = get_connection()
     afiliados = conn.execute('SELECT * FROM afiliados WHERE estado = 1').fetchall()
     conn.close()
     return afiliados
 
+# OBTENER TODOS LOS AFILIADOS INACTIVOS
 def get_all_inactive():
     conn = get_connection()
     afiliados = conn.execute('SELECT * FROM afiliados WHERE estado = 0').fetchall()
     conn.close()
     return afiliados
 
+# OBTENER AFILIADOS POR ID
 def get_by_id(id):
     conn = get_connection()
     afiliado = conn.execute('SELECT * FROM afiliados WHERE id = ?', (id,)).fetchone()
     conn.close()
     return afiliado
 
+# CREAR AFILIADOS
 def create(firstName, lastName, email, membershipType):
     conn = get_connection()
     conn.execute(
@@ -49,6 +54,7 @@ def create(firstName, lastName, email, membershipType):
     conn.commit()
     conn.close()
 
+# MODIFICAR UN AFILIADO SEGÚN ID
 def update(id, firstName, lastName, email, membershipType):
     conn = get_connection()
     conn.execute(
@@ -58,12 +64,14 @@ def update(id, firstName, lastName, email, membershipType):
     conn.commit()
     conn.close()
 
+# DESACTIVAR UN AFILIADO POR ID
 def deactivate(id):
     conn = get_connection()
     conn.execute('UPDATE afiliados SET estado = 0 WHERE id=?', (id,))
     conn.commit()
     conn.close()
 
+# CALCULAR EL DESCUENTO SEGÚN EL TIPO DE MEMBRESÍA Y EL MONTO
 def calcular_descuento(membershipType, monto):
     descuentos = {
         'silver': 0.05,
