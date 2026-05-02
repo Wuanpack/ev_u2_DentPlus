@@ -8,8 +8,17 @@ afiliado_bp = Blueprint('afiliados', __name__)
 @afiliado_bp.route('/afiliados')
 def index():
     """Obtiene todos los afiliados con la función get_all de models/afiliado.py"""
-    afiliados = afiliado_model.get_all()
-    return render_template('afiliados/index.html', afiliados=afiliados)
+    search = request.args.get('search', '')
+    membership_type = request.args.get('membership_type', '')
+    afiliados = afiliado_model.get_all(
+        search=search or None,
+        membership_type=membership_type or None
+    )
+    return render_template('afiliados/index.html',
+        afiliados=afiliados,
+        search=search,
+        membership_type=membership_type or None
+    )
 
 @afiliado_bp.route('/afiliados/nuevo', methods=['GET', 'POST'])
 def crear():

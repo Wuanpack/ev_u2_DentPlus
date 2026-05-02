@@ -23,10 +23,21 @@ def init_db():
                 )
         ''')
 
-def get_all():
-    """Obtiene todos los afiliados ACTIVOS (estado = 1)"""
+def get_all(search=None, membership_type=None):
+    """Obtiene todos los afiliados ACTIVOS (estado = 1) con búsqueda y filtros adicionales"""
+    query = 'SELECT * FROM afiliados WHERE estado = 1'
+    params = []
+
+    if search:
+        query += ' AND (first_name LIKE ? OR last_name LIKE ? OR email LIKE ?)'
+        params.extend([f'%{search}%', f'%{search}%', f'%{search}%'])
+
+    if membership_type:
+        query += ' AND membership_type = ?'
+        params.append(membership_type)
+
     with get_connection() as conn:
-        return conn.execute('SELECT * FROM afiliados WHERE estado = 1').fetchall()
+        return conn.execute(query, params).fetchall()
 
 def get_all_inactive():
     """Obtiene todos los afiliados INACTIVOS (estado = 0)"""
