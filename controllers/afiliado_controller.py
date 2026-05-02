@@ -1,6 +1,6 @@
 """Módulo Controller para lógica de rutas y coordinación HTTP"""
 import sqlite3
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 import models.afiliado as afiliado_model
 
 afiliado_bp = Blueprint('afiliados', __name__)
@@ -23,6 +23,7 @@ def crear():
                 request.form['email'],
                 request.form['membership_type']
             )
+            flash('Afiliado creado correctamente.', 'success')
             return redirect(url_for('afiliados.index'))
         except sqlite3.IntegrityError as e:
             print(f"Error al crear afiliado: {e}")
@@ -54,6 +55,7 @@ def editar(afiliado_id):
             request.form['email'],
             request.form['membership_type']
         )
+        flash('Afiliado actualizado correctamente.', 'success')
         return redirect(url_for('afiliados.detalle', afiliado_id=afiliado_id))
     return render_template('afiliados/formulario.html', afiliado=afiliado)
 
@@ -61,6 +63,7 @@ def editar(afiliado_id):
 def desactivar(afiliado_id):
     """Desactiva un usuario por medio de su id"""
     afiliado_model.deactivate(afiliado_id)
+    flash('Afiliado desactivado', 'warning')
     return redirect(url_for('afiliados.index'))
 
 @afiliado_bp.route('/afiliados/inactivos')
@@ -73,4 +76,5 @@ def inactivos():
 def activar(afiliado_id):
     """Reactiva un afiliado por medio de su afiliado_id"""
     afiliado_model.activate(afiliado_id)
+    flash('Afiliado reactivado correctamente', 'success')
     return redirect(url_for('afiliados.inactivos'))
