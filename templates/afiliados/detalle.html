@@ -6,6 +6,12 @@
     <div>
         <a href="/afiliados/{{ afiliado['afiliado_id'] }}/editar" class="btn btn-secondary">Editar</a>
         <a href="/afiliados" class="btn btn-outline-secondary">Volver</a>
+        <form action="/afiliados/{{ afiliado['afiliado_id'] }}/desactivar" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-outline-danger"
+                onclick="return confirm('¿Desactivar este afiliado?')">
+                Desactivar
+            </button>
+        </form>
     </div>
 </div>
 
