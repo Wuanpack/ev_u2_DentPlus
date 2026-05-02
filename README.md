@@ -74,10 +74,27 @@ ev_u2_DentPlus/
 - Listar todos los afiliados activos
 - Listar todos los afiliados inactivos y reactivarlos
 - Ver detalle de un afiliado
-- Crear un nuevo afiliado
-- Editar los datos de un afiliado existente
+- Crear un nuevo afiliado con validación de datos en el backend
+- Editar los datos de un afiliado existente con validación de datos en el backend
 - Desactivar un afiliado (soft delete)
+- Búsqueda de afiliados por nombre o email
+- Filtrado de afiliados por tipo de membresía
+- Exportar listado de afiliados activos a CSV
 - **Simulador de descuento** en la vista de detalle: ingresa un monto de tratamiento y calcula el precio final según la membresía del afiliado
+- Notificaciones flotantes con animación de entrada y salida para confirmar acciones realizadas
+
+---
+
+## Validaciones de Formulario
+
+Las siguientes validaciones se aplican en el backend al crear o editar un afiliado:
+
+| Campo | Validación |
+|---|---|
+| `first_name` | Mínimo 2 caracteres, solo letras y espacios |
+| `last_name` | Mínimo 2 caracteres, solo letras y espacios |
+| `email` | Formato de email válido, único en la base de datos |
+| `membership_type` | Debe ser `silver`, `gold` o `platinum` |
 
 ---
 
@@ -131,7 +148,10 @@ http://localhost:5000
 | Método | Ruta | Descripción |
 |---|---|---|
 | GET | `/afiliados` | Listado de afiliados activos |
+| GET | `/afiliados?search=juan` | Búsqueda por nombre o email |
+| GET | `/afiliados?membership_type=gold` | Filtrado por tipo de membresía |
 | GET | `/afiliados/inactivos` | Listado de afiliados inactivos |
+| GET | `/afiliados/exportar` | Descarga del listado de afiliados en CSV |
 | GET | `/afiliados/nuevo` | Formulario de creación |
 | POST | `/afiliados/nuevo` | Crear nuevo afiliado |
 | GET | `/afiliados/<afiliado_id>` | Detalle de un afiliado |
