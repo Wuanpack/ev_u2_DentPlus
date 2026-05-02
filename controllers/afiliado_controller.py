@@ -1,6 +1,8 @@
 """Módulo Controller para lógica de rutas y coordinación HTTP"""
 import sqlite3
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+import csv
+import io
+from flask import Blueprint, render_template, request, redirect, url_for, flash, Response
 import models.afiliado as afiliado_model
 
 afiliado_bp = Blueprint('afiliados', __name__)
@@ -22,6 +24,7 @@ def index():
 
 @afiliado_bp.route('/afiliados/nuevo', methods=['GET', 'POST'])
 def crear():
+    """Crea un usuario usando la función create de models/afiliado.py"""
     errors = []
     if request.method == 'POST':
         first_name = request.form['first_name']
@@ -58,6 +61,7 @@ def detalle(afiliado_id):
 
 @afiliado_bp.route('/afiliados/<int:afiliado_id>/editar', methods=['GET', 'POST'])
 def editar(afiliado_id):
+    """Modifica los datos de un afiliado dependiendo de su afiliado_id"""
     afiliado = afiliado_model.get_by_id(afiliado_id)
     errors = []
     if request.method == 'POST':
@@ -94,3 +98,28 @@ def activar(afiliado_id):
     afiliado_model.activate(afiliado_id)
     flash('Afiliado reactivado correctamente', 'success')
     return redirect(url_for('afiliados.inactivos'))
+
+@afiliado_bp.route('/afiliados/exportar')
+def exportar_csv():
+    """Exporta el listado de afiliados activos a CSV"""
+    afiliados = afiliado_model.get_all_for_export()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    writer.writerow(['ID', 'Nombre', 'Apellido', 'Email', 'Membresía'])
+    for afiliado in afiliados:
+        writer. writerow([
+            afiliado['afiliado_id'],
+            afiliado['first_name'],
+            afiliado['last_name'],
+            afiliado['email'],
+            afiliado['membership_type']
+        ])
+
+    output.seek(0)
+    return Response(
+        output,
+        mimetype='text/csv',
+        headers={'Content-Disposition': 'attachment; filename=afiliados_dentplus.csv'}
+    )

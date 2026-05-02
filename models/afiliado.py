@@ -1,5 +1,6 @@
 """Model para realizar peticiones a la BBDD"""
-import sqlite3, re
+import sqlite3
+import re
 
 DB_PATH = 'dentplus.db'
 
@@ -108,3 +109,10 @@ def validar_afiliado(first_name, last_name, email, membership_type):
         errors.append('El tipo de membresía no es válido.')
 
     return errors
+
+def get_all_for_export():
+    """Obtiene todos los afiliados activos para exportar a CSV"""
+    with get_connection() as conn:
+        return conn.execute(
+            'SELECT afiliado_id, first_name, last_name, email, membership_type FROM afiliados WHERE estado = 1'
+        ). fetchall()
