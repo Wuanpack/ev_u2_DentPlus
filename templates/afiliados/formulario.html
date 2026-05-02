@@ -11,14 +11,14 @@
         <form method="POST">
             <div class="mb-3">
                 <label class="form-label">Nombre</label>
-                <input type="text" name="firstName" class="form-control"
-                    value="{{ afiliado['firstName'] if afiliado else '' }}" required>
+                <input type="text" name="first_name" class="form-control"
+                    value="{{ afiliado['first_name'] if afiliado else '' }}" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Apellido</label>
-                <input type="text" name="lastName" class="form-control"
-                    value="{{ afiliado['lastName'] if afiliado else '' }}" required>
+                <input type="text" name="last_name" class="form-control"
+                    value="{{ afiliado['last_name'] if afiliado else '' }}" required>
             </div>
 
             <div class="mb-3">
@@ -29,11 +29,11 @@
 
             <div class="mb-3">
                 <label class="form-label">Tipo de membresía</label>
-                <select name="membershipType" class="form-select" required>
+                <select name="membership_type" class="form-select" required>
                     <option value="">Selecciona un tipo</option>
-                    <option value="silver" {% if afiliado and afiliado['membershipType'] == 'silver' %}selected{% endif %}>Silver — 5%</option>
-                    <option value="gold" {% if afiliado and afiliado['membershipType'] == 'gold' %}selected{% endif %}>Gold — 10%</option>
-                    <option value="platinum" {% if afiliado and afiliado['membershipType'] == 'platinum' %}selected{% endif %}>Platinum — 20%</option>
+                    <option value="silver" {% if afiliado and afiliado['membership_type'] == 'silver' %}selected{% endif %}>Silver — 5%</option>
+                    <option value="gold" {% if afiliado and afiliado['membership_type'] == 'gold' %}selected{% endif %}>Gold — 10%</option>
+                    <option value="platinum" {% if afiliado and afiliado['membership_type'] == 'platinum' %}selected{% endif %}>Platinum — 20%</option>
                 </select>
             </div>
 
