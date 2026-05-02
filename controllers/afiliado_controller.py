@@ -22,22 +22,26 @@ def index():
 
 @afiliado_bp.route('/afiliados/nuevo', methods=['GET', 'POST'])
 def crear():
-    """Crea un afiliado con la función create de models/afiliado.py"""
-    error = None
+    errors = []
     if request.method == 'POST':
-        try:
-            afiliado_model.create(
-                request.form['first_name'],
-                request.form['last_name'],
-                request.form['email'],
-                request.form['membership_type']
-            )
-            flash('Afiliado creado correctamente.', 'success')
-            return redirect(url_for('afiliados.index'))
-        except sqlite3.IntegrityError as e:
-            print(f"Error al crear afiliado: {e}")
-            error = 'El email ingresado ya está registrado.'
-    return render_template('afiliados/formulario.html', afiliado=None, error=error)
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
+        membership_type = request.form['membership_type']
+
+        errors = afiliado_model.validar_afiliado(first_name, last_name, email, membership_type)
+
+        if not errors:
+            try:
+                afiliado_model.create(first_name, last_name, email, membership_type)
+                flash('Afiliado creado correctamente.', 'success')
+                return redirect(url_for('afiliados.index'))
+            except sqlite3.IntegrityError as e:
+                print(f"Error al crear afiliado: {e}")
+                errors.append('El email ingresado ya está registrado.')
+
+    return render_template('afiliados/formulario.html', afiliado=None, errors=errors)
+
 
 @afiliado_bp.route('/afiliados/<int:afiliado_id>')
 def detalle(afiliado_id):
@@ -54,19 +58,22 @@ def detalle(afiliado_id):
 
 @afiliado_bp.route('/afiliados/<int:afiliado_id>/editar', methods=['GET', 'POST'])
 def editar(afiliado_id):
-    """Edita un usuario usando get_by_id"""
     afiliado = afiliado_model.get_by_id(afiliado_id)
+    errors = []
     if request.method == 'POST':
-        afiliado_model.update(
-            afiliado_id,
-            request.form['first_name'],
-            request.form['last_name'],
-            request.form['email'],
-            request.form['membership_type']
-        )
-        flash('Afiliado actualizado correctamente.', 'success')
-        return redirect(url_for('afiliados.detalle', afiliado_id=afiliado_id))
-    return render_template('afiliados/formulario.html', afiliado=afiliado)
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
+        membership_type = request.form['membership_type']
+
+        errors = afiliado_model.validar_afiliado(first_name, last_name, email, membership_type)
+
+        if not errors:
+            afiliado_model.update(afiliado_id, first_name, last_name, email, membership_type)
+            flash('Afiliado actualizado correctamente.', 'success')
+            return redirect(url_for('afiliados.detalle', afiliado_id=afiliado_id))
+
+    return render_template('afiliados/formulario.html', afiliado=afiliado, errors=errors)
 
 @afiliado_bp.route('/afiliados/<int:afiliado_id>/desactivar', methods=['POST'])
 def desactivar(afiliado_id):
