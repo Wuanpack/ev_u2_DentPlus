@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Afiliados</h1>
+</div>
+
+{% if afiliados %}
+<table class="table table-striped table-hover">
+    <thead class="table-primary">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Membresía</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for afiliado in afiliados %}
+        <tr>
+            <td>{{ afiliado['id'] }}</td>
+            <td>{{ afiliado['firstName'] }} {{ afiliado['lastName'] }}</td>
+            <td>{{ afiliado['email'] }}</td>
+            <td>
+                {% if afiliado['membershipType'] == 'silver' %}
+                    <span class="badge bg-secondary">Silver</span>
+                {% elif afiliado['membershipType'] == 'gold' %}
+                    <span class="badge bg-warning text-dark">Gold</span>
+                {% elif afiliado['membershipType'] == 'platinum' %}
+                    <span class="badge bg-info">Platinum</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="/afiliados/{{ afiliado['id'] }}" class="btn btn-sm btn-outline-primary">Ver</a>
+                <a href="/afiliados/{{ afiliado['id'] }}/editar" class="btn btn-sm btn-outline-secondary">Editar</a>
+                <form action="/afiliados/{{ afiliado['id'] }}/desactivar" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                        onclick="return confirm('¿Desactivar este afiliado?')">
+                        Desactivar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">No hay afiliados registrados aún.</div>
+{% endif %}
+{% endblock %}

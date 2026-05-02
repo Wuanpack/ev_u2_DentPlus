@@ -9,67 +9,53 @@ def get_connection():
     return conn
 
 def init_db():
-    conn = get_connection()
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS afiliados (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            firstName TEXT NOT NULL,
-            lastName TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            membershipType TEXT NOT NULL CHECK(membershipType IN ('silver', 'gold', 'platinum')),
-            estado INTEGER NOT NULL DEFAULT 1
-            )
-    ''')
-    conn.commit()
-    conn.close()
+    with get_connection() as conn:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS afiliados (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firstName TEXT NOT NULL,
+                lastName TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                membershipType TEXT NOT NULL CHECK(membershipType IN ('silver', 'gold', 'platinum')),
+                estado INTEGER NOT NULL DEFAULT 1
+                )
+        ''')
 
 # OBTENER TODOS LOS AFILIADOS ACTIVOS
 def get_all():
-    conn = get_connection()
-    afiliados = conn.execute('SELECT * FROM afiliados WHERE estado = 1').fetchall()
-    conn.close()
-    return afiliados
+    with get_connection() as conn:
+        return conn.execute('SELECT * FROM afiliados WHERE estado = 1').fetchall()
 
 # OBTENER TODOS LOS AFILIADOS INACTIVOS
 def get_all_inactive():
-    conn = get_connection()
-    afiliados = conn.execute('SELECT * FROM afiliados WHERE estado = 0').fetchall()
-    conn.close()
-    return afiliados
+    with get_connection() as conn:
+        return conn.execute('SELECT * FROM afiliados WHERE estado = 0').fetchall()
 
 # OBTENER AFILIADOS POR ID
 def get_by_id(id):
-    conn = get_connection()
-    afiliado = conn.execute('SELECT * FROM afiliados WHERE id = ?', (id,)).fetchone()
-    conn.close()
-    return afiliado
+    with get_connection() as conn:
+        return conn.execute('SELECT * FROM afiliados WHERE id = ?', (id,)).fetchone()
 
 # CREAR AFILIADOS
 def create(firstName, lastName, email, membershipType):
-    conn = get_connection()
-    conn.execute(
-        'INSERT INTO afiliados (firstName, lastName, email, membershipType) VALUES (?,?,?,?)',
-        (firstName, lastName, email, membershipType)
-    )
-    conn.commit()
-    conn.close()
+    with get_connection() as conn:
+        conn.execute(
+            'INSERT INTO afiliados (firstName, lastName, email, membershipType) VALUES (?,?,?,?)',
+            (firstName, lastName, email, membershipType)
+        )
 
 # MODIFICAR UN AFILIADO SEGÚN ID
 def update(id, firstName, lastName, email, membershipType):
-    conn = get_connection()
-    conn.execute(
-        'UPDATE afiliados SET firstName=?, lastName=?, email=?, membershipType=? WHERE id=?',
-        (firstName, lastName, email, membershipType, id)
-    )
-    conn.commit()
-    conn.close()
+    with get_connection() as conn:
+        conn.execute(
+            'UPDATE afiliados SET firstName=?, lastName=?, email=?, membershipType=? WHERE id=?',
+            (firstName, lastName, email, membershipType, id)
+        )
 
 # DESACTIVAR UN AFILIADO POR ID
 def deactivate(id):
-    conn = get_connection()
-    conn.execute('UPDATE afiliados SET estado = 0 WHERE id=?', (id,))
-    conn.commit()
-    conn.close()
+    with get_connection() as conn:
+        conn.execute('UPDATE afiliados SET estado = 0 WHERE id=?', (id,))
 
 # CALCULAR EL DESCUENTO SEGÚN EL TIPO DE MEMBRESÍA Y EL MONTO
 def calcular_descuento(membershipType, monto):

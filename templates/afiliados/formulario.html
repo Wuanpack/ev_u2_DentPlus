@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{% if afiliado %}Editar Afiliado{% else %}Nuevo Afiliado{% endif %}</h1>
+    <a href="/afiliados" class="btn btn-outline-secondary">Volver</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" name="firstName" class="form-control"
+                    value="{{ afiliado['firstName'] if afiliado else '' }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Apellido</label>
+                <input type="text" name="lastName" class="form-control"
+                    value="{{ afiliado['lastName'] if afiliado else '' }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control"
+                    value="{{ afiliado['email'] if afiliado else '' }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Tipo de membresía</label>
+                <select name="membershipType" class="form-select" required>
+                    <option value="">Selecciona un tipo</option>
+                    <option value="silver" {% if afiliado and afiliado['membershipType'] == 'silver' %}selected{% endif %}>Silver — 5%</option>
+                    <option value="gold" {% if afiliado and afiliado['membershipType'] == 'gold' %}selected{% endif %}>Gold — 10%</option>
+                    <option value="platinum" {% if afiliado and afiliado['membershipType'] == 'platinum' %}selected{% endif %}>Platinum — 20%</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                {% if afiliado %}Guardar cambios{% else %}Crear afiliado{% endif %}
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
