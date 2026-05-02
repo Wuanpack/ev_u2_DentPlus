@@ -1,6 +1,6 @@
 # 🦷 Sistema de Afiliados DentPlus
 
-Sistema web para la gestión de pacientes afiliados de la clínica dental DentPlus. Permite registrar, consultar, editar y desactivar afiliados, además de simular descuentos según el tipo de membresía de cada paciente.
+Sistema web para la gestión de pacientes afiliados de la clínica dental DentPlus. Permite registrar, consultar, editar, desactivar y reactivar afiliados, además de simular descuentos según el tipo de membresía de cada paciente.
 
 Desarrollado con arquitectura **MVC** usando Python, Flask y SQLite.
 
@@ -28,7 +28,8 @@ ev_u2_DentPlus/
 ├── templates/
 │   ├── layout.html                 # Vista base compartida (navbar, Bootstrap)
 │   └── afiliados/
-│       ├── index.html              # Vista — listado de afiliados
+│       ├── index.html              # Vista — listado de afiliados activos
+│       ├── inactivos.html          # Vista — listado de afiliados inactivos
 │       ├── detalle.html            # Vista — detalle + simulador de descuento
 │       └── formulario.html        # Vista — formulario de crear/editar
 └── requirements.txt
@@ -49,11 +50,11 @@ ev_u2_DentPlus/
 
 | Campo | Tipo | Descripción |
 |---|---|---|
-| `id` | INTEGER | Identificador único, generado automáticamente |
-| `firstName` | TEXT | Nombre del afiliado |
-| `lastName` | TEXT | Apellido del afiliado |
+| `afiliado_id` | INTEGER | Identificador único, generado automáticamente |
+| `first_name` | TEXT | Nombre del afiliado |
+| `last_name` | TEXT | Apellido del afiliado |
 | `email` | TEXT | Correo electrónico (único) |
-| `membershipType` | TEXT | Tipo de membresía: `silver`, `gold` o `platinum` |
+| `membership_type` | TEXT | Tipo de membresía: `silver`, `gold` o `platinum` |
 | `estado` | INTEGER | Estado del afiliado: `1` activo, `0` inactivo |
 
 ### Tipos de membresía y descuentos
@@ -64,13 +65,14 @@ ev_u2_DentPlus/
 | Gold | 10% |
 | Platinum | 20% |
 
-> El campo `estado` implementa **borrado lógico (soft delete)** — los afiliados nunca se eliminan físicamente de la base de datos, solo se desactivan.
+> El campo `estado` implementa **borrado lógico (soft delete)** — los afiliados nunca se eliminan físicamente de la base de datos, solo se desactivan y pueden reactivarse.
 
 ---
 
 ## Funcionalidades
 
 - Listar todos los afiliados activos
+- Listar todos los afiliados inactivos y reactivarlos
 - Ver detalle de un afiliado
 - Crear un nuevo afiliado
 - Editar los datos de un afiliado existente
@@ -129,13 +131,15 @@ http://localhost:5000
 | Método | Ruta | Descripción |
 |---|---|---|
 | GET | `/afiliados` | Listado de afiliados activos |
+| GET | `/afiliados/inactivos` | Listado de afiliados inactivos |
 | GET | `/afiliados/nuevo` | Formulario de creación |
 | POST | `/afiliados/nuevo` | Crear nuevo afiliado |
-| GET | `/afiliados/<id>` | Detalle de un afiliado |
-| GET | `/afiliados/<id>?monto=80000` | Detalle con simulador de descuento |
-| GET | `/afiliados/<id>/editar` | Formulario de edición |
-| POST | `/afiliados/<id>/editar` | Guardar cambios del afiliado |
-| POST | `/afiliados/<id>/desactivar` | Desactivar afiliado |
+| GET | `/afiliados/<afiliado_id>` | Detalle de un afiliado |
+| GET | `/afiliados/<afiliado_id>?monto=80000` | Detalle con simulador de descuento |
+| GET | `/afiliados/<afiliado_id>/editar` | Formulario de edición |
+| POST | `/afiliados/<afiliado_id>/editar` | Guardar cambios del afiliado |
+| POST | `/afiliados/<afiliado_id>/desactivar` | Desactivar afiliado |
+| POST | `/afiliados/<afiliado_id>/activar` | Reactivar afiliado inactivo |
 
 ---
 
