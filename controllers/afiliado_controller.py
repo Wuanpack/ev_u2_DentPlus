@@ -44,7 +44,7 @@ def crear():
                 afiliado_model.create(first_name, last_name, email, membership_type)
                 flash('Afiliado creado correctamente.', 'success')
                 return redirect(url_for('afiliados.index'))
-            except sqlite3.IntegrityError as e:
+            except sqlite3.IntegrityError:
                 errors.append('El email ingresado ya está registrado.')
 
     return render_template('afiliados/formulario.html', afiliado=None, errors=errors)
