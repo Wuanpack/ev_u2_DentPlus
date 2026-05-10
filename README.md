@@ -47,7 +47,8 @@ ev_u2_DentPlus/
 
 | Capa | Archivo | Responsabilidad |
 |---|---|---|
-| Model | `models/afiliado.py` | Acceso a base de datos y lógica de negocio |
+| Model | `models/afiliado.py` | Acceso a base de datos |
+| Services | `services/` | Lógica de negocios |
 | View | `templates/` | Presentación HTML con Jinja2 |
 | Controller | `controllers/afiliado_controller.py` | Manejo de peticiones HTTP |
 | Router | `app.py` + Blueprint | Mapeo de URLs a funciones |
