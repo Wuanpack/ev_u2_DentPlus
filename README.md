@@ -27,11 +27,18 @@ ev_u2_DentPlus/
 │   └── afiliado_controller.py      # Controller — coordinación HTTP y lógica de rutas
 ├── templates/
 │   ├── layout.html                 # Vista base compartida (navbar, Bootstrap)
-│   └── afiliados/
-│       ├── index.html              # Vista — listado de afiliados activos
-│       ├── inactivos.html          # Vista — listado de afiliados inactivos
-│       ├── detalle.html            # Vista — detalle + simulador de descuento
-│       └── formulario.html        # Vista — formulario de crear/editar
+│   ├── afiliados/
+│   │   ├── index.html              # Vista — listado de afiliados activos
+│   │   ├── inactivos.html          # Vista — listado de afiliados inactivos
+│   │   ├── detalle.html            # Vista — detalle + simulador de descuento
+│   │   └── formulario.html         # Vista — formulario de crear/editar
+│   └── extras
+│       └── flash_cards.html        # Extra — Flash cards del layout
+├── static/
+│   ├── css
+│   │   └── layout.css             # Estilos layout.html
+│   └── js
+│       └── layout.js              # Scripts layout.html
 └── requirements.txt
 ```
 
