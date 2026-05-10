@@ -1,6 +1,5 @@
 """Model para realizar peticiones a la BBDD"""
 import sqlite3
-import re
 
 DB_PATH = 'dentplus.db'
 
@@ -75,40 +74,6 @@ def activate(afiliado_id):
     """Reactiva un usuario dependiendo de su afiliado_id"""
     with get_connection() as conn:
         conn.execute('UPDATE afiliados SET estado = 1 WHERE afiliado_id=?', (afiliado_id,))
-
-def calcular_descuento(membership_type, monto):
-    """Calcula el descuento de un monto dependiendo del membershipType"""
-    descuentos = {
-        'silver': 0.05,
-        'gold': 0.10,
-        'platinum': 0.20
-    }
-    porcentaje = descuentos.get(membership_type, 0)
-    descuento = monto * porcentaje
-    total = monto - descuento
-    return round(descuento, 2), round(total, 2)
-
-def validar_afiliado(first_name, last_name, email, membership_type):
-    """Valida los datos de un afiliado y retorna una lista de errores"""
-    errors = []
-
-    if not first_name or len(first_name.strip()) < 2:
-        errors.append('El nombre debe tener al menos 2 carácteres.')
-    elif not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$', first_name):
-        errors.append('El nombre sólo puede contener letras y espacios')
-
-    if not last_name or len(last_name.strip()) < 2:
-        errors.append('El apellido debe tener al menos 2 caracteres.')
-    elif not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$', last_name):
-        errors.append('El apellido solo puede contener letras y espacios.')
-
-    if not email or not re.match(r'^[\w\.-]+@[\w\.-]+\.\w{2,}$', email):
-        errors.append('El email ingresado no es válido.')
-
-    if membership_type not in ('silver', 'gold', 'platinum'):
-        errors.append('El tipo de membresía no es válido.')
-
-    return errors
 
 def get_all_for_export():
     """Obtiene todos los afiliados activos para exportar a CSV"""

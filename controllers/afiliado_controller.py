@@ -4,6 +4,8 @@ import csv
 import io
 from flask import Blueprint, render_template, request, redirect, url_for, flash, Response
 import models.afiliado as afiliado_model
+from services.validacion_service import validar_afiliado
+from services.descuento_service import calcular_descuento
 
 afiliado_bp = Blueprint('afiliados', __name__)
 
@@ -32,7 +34,7 @@ def crear():
         email = request.form['email']
         membership_type = request.form['membership_type']
 
-        errors = afiliado_model.validar_afiliado(first_name, last_name, email, membership_type)
+        errors = validar_afiliado(first_name, last_name, email, membership_type)
 
         if not errors:
             try:
@@ -55,7 +57,7 @@ def detalle(afiliado_id):
 
     if request.args.get('monto'):
         monto = float(request.args.get('monto'))
-        descuento, total = afiliado_model.calcular_descuento(afiliado['membership_type'], monto)
+        descuento, total = calcular_descuento(afiliado['membership_type'], monto)
 
     return render_template('afiliados/detalle.html', afiliado=afiliado, descuento=descuento, total=total)
 
@@ -70,7 +72,7 @@ def editar(afiliado_id):
         email = request.form['email']
         membership_type = request.form['membership_type']
 
-        errors = afiliado_model.validar_afiliado(first_name, last_name, email, membership_type)
+        errors = validar_afiliado(first_name, last_name, email, membership_type)
 
         if not errors:
             afiliado_model.update(afiliado_id, first_name, last_name, email, membership_type)

@@ -36,9 +36,12 @@ ev_u2_DentPlus/
 │       └── flash_cards.html        # Extra — Flash cards del layout
 ├── static/
 │   ├── css
-│   │   └── layout.css             # Estilos layout.html
+│   │   └── layout.css              # Estilos layout.html
 │   └── js
-│       └── layout.js              # Scripts layout.html
+│       └── layout.js               # Scripts layout.html
+├── services/
+│   ├── descuento_service.py        # Servicio — cálculo del descuento
+│   └── validacion_service.py       # Servicio — validación de afiliados
 └── requirements.txt
 ```
 
