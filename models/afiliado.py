@@ -80,4 +80,12 @@ def get_all_for_export():
     with get_connection() as conn:
         return conn.execute(
             'SELECT afiliado_id, first_name, last_name, email, membership_type FROM afiliados WHERE estado = 1'
-        ). fetchall()
+        ).fetchall()
+
+def get_by_email(email):
+    """Obtiene un email en específico"""
+    with get_connection() as conn:
+        return conn.execute(
+            'SELECT * FROM afiliados WHERE email = ?',
+            (email,)
+        ).fetchone()

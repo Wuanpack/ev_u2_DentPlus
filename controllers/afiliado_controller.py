@@ -4,7 +4,7 @@ import csv
 import io
 from flask import Blueprint, render_template, request, redirect, url_for, flash, Response
 import models.afiliado as afiliado_model
-from services.validacion_service import validar_afiliado
+from services.validacion_service import validar_afiliado, validar_email_unico
 from services.descuento_service import calcular_descuento
 
 afiliado_bp = Blueprint('afiliados', __name__)
@@ -35,6 +35,9 @@ def crear():
         membership_type = request.form['membership_type']
 
         errors = validar_afiliado(first_name, last_name, email, membership_type)
+        error_email = validar_email_unico(email)
+        if error_email:
+            errors.append(error_email)
 
         if not errors:
             try:
@@ -42,7 +45,6 @@ def crear():
                 flash('Afiliado creado correctamente.', 'success')
                 return redirect(url_for('afiliados.index'))
             except sqlite3.IntegrityError as e:
-                print(f"Error al crear afiliado: {e}")
                 errors.append('El email ingresado ya está registrado.')
 
     return render_template('afiliados/formulario.html', afiliado=None, errors=errors)
@@ -73,6 +75,9 @@ def editar(afiliado_id):
         membership_type = request.form['membership_type']
 
         errors = validar_afiliado(first_name, last_name, email, membership_type)
+        error_email = validar_email_unico(email, afiliado_id)
+        if error_email:
+            errors.append(error_email)
 
         if not errors:
             afiliado_model.update(afiliado_id, first_name, last_name, email, membership_type)
@@ -111,7 +116,7 @@ def exportar_csv():
 
     writer.writerow(['ID', 'Nombre', 'Apellido', 'Email', 'Membresía'])
     for afiliado in afiliados:
-        writer. writerow([
+        writer.writerow([
             afiliado['afiliado_id'],
             afiliado['first_name'],
             afiliado['last_name'],
