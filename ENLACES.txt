@@ -1,0 +1,7 @@
+Nombre: Alonso García Espinoza
+Institución: IP San Sebastián
+Ramo: Desarrollo de Software Web I — Evaluación Unidad 2
+Docente: Boris Belmar Muñoz
+
+Video Subido a Youtube: https://www.youtube.com/watch?v=RiiZxiivuqY
+Repositorio en GitHub: https://github.com/Wuanpack/ev_u2_DentPlus
